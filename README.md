@@ -61,10 +61,16 @@ botones dibujados, etc.) **todavía no están traducidos**. Eso llegará en **fu
 > [!WARNING]
 > **¿El juego se cierra al arrancar las primeras veces? ¡No te rindas!**
 >
-> Es **normal** que la primera vez (o las primeras veces) que abras el juego con el parche **se cierre
-> solo mientras carga en la pantalla de inicio**. **Vuelve a abrirlo.** Suele arrancar bien después de
-> **3 o 4 intentos como máximo**. Todavía no sabemos por qué pasa, pero una vez que arranca funciona
-> con normalidad.
+> Es **normal** que, con el parche, el juego **se cierre solo mientras carga en la pantalla de inicio**.
+> **Sigue abriéndolo hasta que entre: sí funciona.**
+>
+> La cantidad de intentos **no es fija**: a veces entra a la primera y otras veces hacen falta varios.
+> Todavía no sabemos por qué pasa.
+>
+> - Suele pasar más al abrir el juego **por primera vez** o **después de reiniciar la PC**.
+> - Una vez que logró arrancar, lo más probable es que las siguientes veces entre con **pocos intentos o a la primera**.
+>
+> Cuando ya está dentro, el juego funciona con normalidad.
 
 <details>
 <summary><b>🛠️ Instalación manual (sin el .bat)</b></summary>
@@ -112,9 +118,11 @@ vuelva a descargar sus datos.
 
 ## 🐞 ¿Encontraste un error?
 
-La traducción es enorme y **hay fallas en algunas partes**: frases raras, textos cortados, algo que
-quedó en inglés, un nombre que no coincide… **Cualquier cosa rara que veas, avísanos** para poder
-corregirla.
+La traducción es enorme y **hay fallas en algunas partes**. Algunas secciones se tradujeron a mano y
+otras con ayuda de **traductores automáticos (como DeepL)**, así que puedes encontrar frases raras,
+textos cortados, algo que quedó en inglés o un nombre que no coincide.
+
+**Cualquier cosa rara que veas, avísanos** para poder corregirla.
 
 👉 **[Abre un reporte aquí](https://github.com/NexusChaser/galaxyz-neo-espanol-latino/issues/new/choose)**.
 Si puedes, dinos **dónde aparece** (menú, capítulo, personaje) y adjunta una **captura de pantalla**.
