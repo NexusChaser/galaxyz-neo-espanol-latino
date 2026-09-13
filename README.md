@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/banner.svg" alt="GALAXYZ neo — Parche de traducción al Español Latino" width="100%">
+  <img src=".github/banner.png" alt="GALAXYZ neo — Parche de traducción al Español Latino" width="100%">
 </p>
 
 <p align="center">
