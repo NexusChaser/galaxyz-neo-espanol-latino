@@ -19,30 +19,23 @@ if not exist "%SRC%\scene_data.epk" (
     exit /b 1
 )
 
-if not exist "%DATA%" (
-    echo [ERROR] No se encontro la carpeta del juego:
-    echo   %DATA%
-    echo Abre el juego al menos una vez, deja que descargue los datos,
-    echo cierralo y vuelve a ejecutar este instalador.
-    pause
-    exit /b 1
-)
-
+echo El parche se instalara en:
+echo   %DATA%
+echo.
 echo Cierra el juego antes de continuar.
 pause
 
-rem Copia de seguridad (solo la primera vez, para no pisar los originales)
+rem Copia de seguridad (solo la primera vez y solo si ya habia .epk sueltos,
+rem por ejemplo de otro mod). Los archivos originales del juego estan dentro
+rem de su OBB y nunca se modifican.
 if not exist "%BACKUP%" (
-    echo Creando copia de seguridad en:
-    echo   %BACKUP%
     for %%D in ("locale\us\epk" "epk" "root\epk") do (
-        if exist "%DATA%\%%~D" (
+        if exist "%DATA%\%%~D\*.epk" (
             mkdir "%BACKUP%\%%~D" 2>nul
             copy /Y "%DATA%\%%~D\*.epk" "%BACKUP%\%%~D\" >nul
+            echo Copia de seguridad de %%~D guardada.
         )
     )
-) else (
-    echo Ya existe una copia de seguridad, no se sobrescribe.
 )
 
 echo.
@@ -60,4 +53,7 @@ for %%D in ("locale\us\epk" "epk" "root\epk") do (
 
 echo.
 echo ¡Listo! Ya puedes abrir el juego en español.
+echo.
+echo Si el juego se cierra mientras carga la pantalla de inicio, es normal:
+echo sigue abriendolo hasta que entre.
 pause

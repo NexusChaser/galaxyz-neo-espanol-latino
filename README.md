@@ -48,15 +48,18 @@ botones dibujados, etc.) **todavía no están traducidos**. Eso llegará en **fu
 
 ## 📦 Instalación
 
-1. Abre el juego **al menos una vez** para que descargue sus datos y luego **ciérralo**.
+1. Asegúrate de que el juego esté **cerrado**.
 2. **[Descarga el parche](https://github.com/NexusChaser/galaxyz-neo-espanol-latino/releases/latest/download/GALAXYZ-neo-Espanol-Latino.zip)** y descomprime el ZIP.
 3. Haz doble clic en **`instalar.bat`**.
 
-¡Y listo! El instalador:
+¡Y listo! El instalador copia los archivos traducidos en `%LOCALAPPDATA%\fuzz\galaxyz\data\`
+y crea las carpetas si no existen. Si ahí ya había archivos `.epk` (por ejemplo de otro mod), antes
+los guarda en `backup_antes_del_parche\`.
 
-- 💾 Guarda una **copia de seguridad** de tus archivos originales en
-  `%LOCALAPPDATA%\fuzz\galaxyz\data\backup_antes_del_parche\` (solo la primera vez).
-- 📂 Copia los archivos traducidos en las **3 carpetas** donde el juego los lee.
+> [!NOTE]
+> **Tu juego no se modifica.** Los archivos originales siguen dentro del paquete del juego. Al
+> arrancar, el juego mira si hay archivos sueltos en esa carpeta y, si los hay, **los usa en lugar de
+> los del paquete**. Por eso basta con copiarlos ahí, y por eso desinstalar es tan simple como borrarlos.
 
 > [!WARNING]
 > **¿El juego se cierra al arrancar las primeras veces? ¡No te rindas!**
@@ -77,7 +80,8 @@ botones dibujados, etc.) **todavía no están traducidos**. Eso llegará en **fu
 
 <br>
 
-Copia **todos** los archivos de la carpeta `epk/` (reemplazando los que ya existen) en estas **tres** carpetas:
+Copia **todos** los archivos de la carpeta `epk/` en estas carpetas. **Si no existen, créalas**: es
+normal que no estén, el juego no las crea.
 
 ```
 %LOCALAPPDATA%\fuzz\galaxyz\data\locale\us\epk\
@@ -85,9 +89,10 @@ Copia **todos** los archivos de la carpeta `epk/` (reemplazando los que ya exist
 %LOCALAPPDATA%\fuzz\galaxyz\data\root\epk\
 ```
 
-Para llegar rápido: pulsa `Win + R`, escribe `%LOCALAPPDATA%\fuzz\galaxyz\data` y presiona Enter.
+Para llegar rápido: pulsa `Win + R`, escribe `%LOCALAPPDATA%` y presiona Enter.
 
-**Tienen que ir en las tres.** Si solo los pones en una, el juego puede seguir mostrando inglés.
+La que de verdad importa es `locale\us\epk`, que es la que sustituye los textos en inglés. El parche
+se probó copiando los archivos en las tres, así que recomendamos hacer lo mismo.
 
 </details>
 
@@ -96,10 +101,12 @@ Para llegar rápido: pulsa `Win + R`, escribe `%LOCALAPPDATA%\fuzz\galaxyz\data`
 
 <br>
 
-Haz doble clic en **`desinstalar.bat`**: restaura los archivos originales desde la copia de seguridad.
+Haz doble clic en **`desinstalar.bat`**. Borra los archivos del parche, devuelve los que hubiera en la
+copia de seguridad y quita las carpetas que queden vacías. El juego vuelve a usar sus textos
+originales.
 
-Si no tienes la copia de seguridad, borra las carpetas `epk` indicadas arriba y deja que el juego
-vuelva a descargar sus datos.
+A mano: borra los `.epk` del parche de las carpetas de arriba. **No borres toda la carpeta `data`**,
+porque el juego guarda ahí otras cosas suyas (por ejemplo `user\`).
 
 </details>
 
@@ -109,7 +116,9 @@ vuelva a descargar sus datos.
 <br>
 
 - El juego debe estar en **inglés**: el parche reemplaza los textos en inglés.
-- Si el juego se **actualiza** y vuelve a salir texto en inglés, ejecuta `instalar.bat` otra vez.
+- Si el juego se **actualiza**, el parche sigue puesto, pero puede no ser compatible con la nueva
+  versión. Si ves textos raros o el juego deja de arrancar después de una actualización, desinstala
+  el parche y espera a una versión nueva.
 - **No abras ni edites** los `.epk` con un editor de texto: están cifrados y el juego se cierra si están dañados.
 
 </details>
@@ -133,7 +142,9 @@ Si puedes, dinos **dónde aparece** (menú, capítulo, personaje) y adjunta una 
 
 - **[kurikomoe](https://github.com/kurikomoe)**, creador de **[FSNr_tools](https://github.com/kurikomoe/FSNr_tools)**.
   Esa herramienta sirvió para descifrar y volver a cifrar los archivos del juego, ya que usa el mismo
-  motor. **Sin ella este parche no habría sido posible.** ¡Muchas gracias!
+  motor. También documenta cómo el motor carga archivos sueltos desde `%LOCALAPPDATA%` en lugar de
+  los del paquete, que es justo lo que hace funcionar este parche. **Sin ella este parche no habría
+  sido posible.** ¡Muchas gracias!
 - A todos los que prueban el parche y reportan errores.
 
 ---
