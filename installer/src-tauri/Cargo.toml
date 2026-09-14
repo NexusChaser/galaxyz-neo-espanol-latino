@@ -1,0 +1,53 @@
+[package]
+name = "galaxyz-neo-es"
+version = "1.1.0"
+description = "Instalador del parche de traducción al Español Latino de GALAXYZ neo"
+authors = ["Proyecto de fans"]
+license = ""
+repository = "https://github.com/NexusChaser/galaxyz-neo-espanol-latino"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "galaxyz_neo_es_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+sha2 = "0.10"
+hex = "0.4"
+serde_json = "1.0"
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.11.3", features = [] }
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-single-instance = "2"
+sha2 = "0.10"
+hex = "0.4"
+thiserror = "2"
+sysinfo = { version = "0.37", default-features = false, features = ["system"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
+ureq = "3"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"
+tauri-winrt-notification = "0.8"
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Console",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

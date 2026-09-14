@@ -1,0 +1,109 @@
+# Publica una versión del parche: compila el instalador, arma el ZIP y el manifest.json,
+# y crea la release de GitHub. Se lanza al subir una etiqueta vX.Y.Z (ver docs/INSTALADOR.md).
+name: Publicar versión
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      etiqueta:
+        description: 'Etiqueta ya existente a publicar (p. ej. v1.1.0)'
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  ETIQUETA: ${{ inputs.etiqueta || github.ref_name }}
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  publicar:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.etiqueta || github.ref }}
+
+      - name: Comprobar que la etiqueta coincide con las versiones
+        shell: pwsh
+        run: |
+          $v = $env:ETIQUETA.TrimStart('v')
+          $cargo = (Select-String -Path installer/src-tauri/Cargo.toml -Pattern '^version = "(.+)"').Matches[0].Groups[1].Value
+          $tauri = (Get-Content installer/src-tauri/tauri.conf.json | ConvertFrom-Json).version
+          $parche = (Get-Content installer/src-tauri/payload/manifest.base.json | ConvertFrom-Json).version
+          "Etiqueta $v · Cargo $cargo · tauri.conf $tauri · manifest.base $parche"
+          if ($cargo -ne $v -or $tauri -ne $v -or $parche -ne $v) {
+            throw "La etiqueta $env:ETIQUETA no coincide con las versiones de Cargo.toml, tauri.conf.json y manifest.base.json"
+          }
+          if (-not (Test-Path "docs/notas/$env:ETIQUETA.md")) { throw "Falta docs/notas/$env:ETIQUETA.md con las notas de la versión" }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: installer/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: installer/src-tauri -> target
+
+      - name: Dependencias
+        working-directory: installer
+        run: npm ci
+
+      - name: Pruebas
+        working-directory: installer
+        run: |
+          npm run check
+          cd src-tauri
+          cargo test --locked
+
+      - name: Compilar el instalador
+        working-directory: installer
+        run: npx tauri build
+
+      - name: Armar ZIP, ejecutable y manifest.json
+        shell: pwsh
+        run: |
+          $salida = New-Item -ItemType Directory -Force salida
+          $zipDir = New-Item -ItemType Directory -Force "empaquetado/GALAXYZ-neo-Espanol-Latino"
+          Copy-Item epk, instalar.bat, desinstalar.bat, README.md $zipDir -Recurse
+          if (Get-ChildItem extra -Recurse -File | Where-Object Name -notin 'LEEME.md', '.gitkeep') {
+            Copy-Item extra $zipDir -Recurse
+          }
+          Compress-Archive -Path $zipDir -DestinationPath salida/GALAXYZ-neo-Espanol-Latino.zip
+
+          $exe = Get-ChildItem installer/src-tauri/target/release -File |
+            Where-Object Name -in 'GalaxyzNeoES.exe', 'galaxyz-neo-es.exe' | Select-Object -First 1
+          if (-not $exe) { throw 'No se encontró el ejecutable compilado' }
+          Copy-Item $exe.FullName salida/GalaxyzNeoES.exe
+
+          # Manifiesto de la versión anterior, para reconocer sus archivos como del parche.
+          $anterior = @()
+          gh release download --repo $env:GITHUB_REPOSITORY --pattern manifest.json --dir anterior 2>$null
+          if (Test-Path anterior/manifest.json) { $anterior = @('--anterior', 'anterior/manifest.json') }
+
+          node installer/scripts/generar-manifest.mjs `
+            --zip salida/GALAXYZ-neo-Espanol-Latino.zip `
+            --instalador salida/GalaxyzNeoES.exe `
+            --notas-archivo "docs/notas/$env:ETIQUETA.md" `
+            @anterior `
+            --salida salida/manifest.json
+          Get-ChildItem salida | Format-Table Name, Length
+
+      - name: Crear la release
+        shell: pwsh
+        run: |
+          $titulo = (Get-Content "docs/notas/$env:ETIQUETA.md" -TotalCount 1).TrimStart('#', ' ')
+          gh release view $env:ETIQUETA --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:ETIQUETA salida/GalaxyzNeoES.exe salida/GALAXYZ-neo-Espanol-Latino.zip salida/manifest.json --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $env:ETIQUETA salida/GalaxyzNeoES.exe salida/GALAXYZ-neo-Espanol-Latino.zip salida/manifest.json `
+              --repo $env:GITHUB_REPOSITORY --title $titulo --notes-file "docs/notas/$env:ETIQUETA.md" --latest
+          }

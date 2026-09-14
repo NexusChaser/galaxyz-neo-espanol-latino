@@ -27,6 +27,7 @@ for %%D in ("locale\us\epk" "epk" "root\epk") do (
         echo   Quitado  %%~D
     )
 )
+if exist "%~dp0extra\" call :quitar_extra
 
 rem Devolver los archivos que habia antes del parche (si los habia)
 if exist "%BACKUP%" (
@@ -44,3 +45,24 @@ for %%D in ("locale\us\epk" "locale\us" "locale" "epk" "root\epk" "root") do rd 
 echo.
 echo Parche desinstalado.
 pause
+exit /b 0
+
+:quitar_extra
+setlocal EnableDelayedExpansion
+set "EXTRA=%~dp0extra\"
+for /R "%EXTRA%" %%F in (*) do (
+    if /I not "%%~nxF"=="LEEME.md" if /I not "%%~nxF"==".gitkeep" (
+        set "REL=%%~fF"
+        set "REL=!REL:%EXTRA%=!"
+        del /Q "%DATA%\!REL!" 2>nul
+        if exist "%BACKUP%\!REL!" copy /Y "%BACKUP%\!REL!" "%DATA%\!REL!" >nul
+    )
+)
+rem Carpetas vacias de extra, de la mas profunda a la menos
+for /f "delims=" %%D in ('dir /s /b /ad "%EXTRA%" 2^>nul ^| sort /r') do (
+    set "REL=%%D"
+    set "REL=!REL:%EXTRA%=!"
+    rd "%DATA%\!REL!" 2>nul
+)
+echo   Quitados los archivos extra
+endlocal & exit /b 0

@@ -1,0 +1,26 @@
+/* Paleta sacada del logo y del banner del repositorio (§4 del plan). */
+:root {
+  --fondo: #0b0726;
+  --morado: #241056;
+  --morado-vidrio: rgba(36, 16, 86, 0.62);
+  --rosa: #ff4f96;
+  --rosa-brillo: rgba(255, 79, 150, 0.45);
+  --lavanda: #c9b6ff;
+  --lavanda-borde: rgba(201, 182, 255, 0.28);
+  --cian: #7fe7ff;
+  --ambar: #ffb347;
+  --rojo: #ff6b7a;
+  --texto: #f4efff;
+  --texto-suave: #b9a8e6;
+
+  --radio: 14px;
+  --radio-grande: 22px;
+  --sombra: 0 12px 40px rgba(5, 2, 20, 0.55);
+  --desenfoque: blur(16px);
+
+  --fuente: 'Segoe UI Variable Text', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --fuente-titulo: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --transicion: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --alto-barra: 40px;
+}
